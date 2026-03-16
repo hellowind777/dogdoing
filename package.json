@@ -1,0 +1,20 @@
+{
+  "name": "dogdoing",
+  "version": "1.0.0",
+  "description": "Dogdoing (刀盾狗/我的刀盾) - Claude Code shield-dog plugin",
+  "files": [
+    ".claude-plugin/",
+    "agents/",
+    "hooks/",
+    "skills/",
+    "scripts/",
+    "assets/",
+    "INJECT.md",
+    "settings.json",
+    "README.md"
+  ],
+  "keywords": ["claude-code", "plugin", "dogdoing", "shield-dog"],
+  "author": "hellowind",
+  "license": "MIT",
+  "repository": "https://github.com/hellowind/dogdoing"
+}

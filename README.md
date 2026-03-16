@@ -10,21 +10,22 @@ Dogdoing 是一个 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 - 🐾 **插上一爪** — 自动拆分任务，作为子代理并行帮忙
 - 👥 **Agent Team 支持** — 编排子代理团队时，刀盾狗必定在列
 - 📣 **喝彩模式** — 实在没活干，就当啦啦队长，总结成果 + 旺旺旺
+- 🔔 **任务通知** — 主代理完成时桌面通知 + 语音提醒，支持 Windows/macOS/Linux
 - 🌏 **中英双语** — 中文环境全中文输出，其他环境英文输出
 - 🎯 **旺旺旺 / Wow-wow-wow** — 中文用"旺"代替"汪"，谐音更旺；英文用"Wow"代替"Woof"，从"bow-wow"来，表示惊叹！
 
 ## 安装
 
-### 方式一：本地加载（推荐测试用）
-
-```bash
-claude --plugin-dir /path/to/dogdoing
-```
-
-### 方式二：CLI 安装（需发布到 marketplace）
+### 方式一：npm 安装（推荐）
 
 ```bash
 claude plugin install dogdoing
+```
+
+### 方式二：本地加载（开发/测试用）
+
+```bash
+claude --plugin-dir /path/to/dogdoing
 ```
 
 ## 插件结构
@@ -33,14 +34,22 @@ claude plugin install dogdoing
 dogdoing/
 ├── .claude-plugin/
 │   └── plugin.json        # 插件清单
+├── assets/
+│   └── sounds/
+│       └── complete.wav   # 预生成语音
 ├── hooks/
-│   └── hooks.json         # SessionStart + UserPromptSubmit 双重 hook
+│   └── hooks.json         # SessionStart + UserPromptSubmit + Stop hook
 ├── agents/
 │   └── dogdoing.md        # 子代理定义，可被 Agent 工具编排
+├── scripts/
+│   ├── notify.py          # 通知脚本（桌面+语音+路由）
+│   └── generate_sounds.py # 语音生成工具（开发用）
 ├── skills/
 │   └── dogdoing/
 │       └── SKILL.md       # /dogdoing 手动召唤技能
 ├── INJECT.md              # 核心指令，由 hook 注入每次会话
+├── settings.json          # 通知级别配置
+├── package.json           # npm 分发
 └── .gitignore
 ```
 
@@ -50,6 +59,43 @@ dogdoing/
 2. **UserPromptSubmit hook** — 每次用户发消息时轻量提醒，防止长对话中 Claude 遗忘
 3. **agents/dogdoing.md** — 子代理定义，支持 `Agent(subagent_type="dogdoing:dogdoing")` 调用
 4. **skills/dogdoing/SKILL.md** — 支持 `/dogdoing` 手动召唤
+5. **Stop hook** — 主代理完成时触发桌面通知 + 语音提醒（子代理不触发）
+
+## 通知配置
+
+编辑插件根目录的 `settings.json`：
+
+```json
+{
+  "notify_level": 3
+}
+```
+
+| 级别 | 效果 |
+|------|------|
+| `0` | 无通知 |
+| `1` | 仅桌面通知 |
+| `2` | 仅语音通知 |
+| `3` | 桌面 + 语音（默认） |
+
+手动测试：
+
+```bash
+# 桌面通知
+python scripts/notify.py desktop "测试通知"
+
+# 语音播放
+python scripts/notify.py sound complete
+```
+
+### 生成/更新语音文件
+
+语音文件已预生成随插件分发，无需额外操作。如需重新生成：
+
+```bash
+pip install edge-tts miniaudio
+python scripts/generate_sounds.py
+```
 
 ## 刀盾狗的三种模式
 
