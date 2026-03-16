@@ -16,10 +16,18 @@ Dogdoing 是一个 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
 ## 安装
 
-### 方式一：npm 安装（推荐）
+### 方式一：从 Marketplace 安装
+
+先添加 marketplace（只需一次）：
 
 ```bash
-claude plugin install dogdoing
+/plugin marketplace add hellowind777/dogdoing
+```
+
+然后安装插件：
+
+```bash
+/plugin install dogdoing
 ```
 
 ### 方式二：本地加载（开发/测试用）
