@@ -5,7 +5,7 @@
   "author": {
     "name": "hellowind"
   },
-  "repository": "https://github.com/hellowind/dogdoing",
+  "repository": "https://github.com/hellowind777/dogdoing",
   "license": "MIT",
   "keywords": ["dogdoing", "shield-dog", "刀盾狗", "我的刀盾", "agent-team", "subagent"],
   "hooks": "./hooks/hooks.json"
