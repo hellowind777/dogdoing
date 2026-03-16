@@ -1,6 +1,6 @@
 ---
 name: dogdoing
-description: "Manually summon Dogdoing (刀盾狗) to help with any task. Use /dogdoing or /dogdoing:dogdoing to invoke."
+description: "Summon Dogdoing (刀盾狗) to help with any task. | 手动召唤刀盾狗帮忙。"
 disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Agent, WebSearch, WebFetch
 ---

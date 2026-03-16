@@ -1,7 +1,7 @@
 {
   "name": "dogdoing",
   "version": "1.0.0",
-  "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog plugin that always participates in every task. It inserts its 'paw' into every job, sharing the workload as a subagent. When it truly can't help, it cheers the team on with '旺旺旺' (CN) or 'Wow-wow-wow' (EN)!",
+  "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog that participates in every task, splitting work as a subagent. Cheers with Wow-wow-wow when idle! | 一只永远不会缺席的工作犬，每个任务都插上一爪，没活就旺旺旺喝彩！",
   "author": {
     "name": "hellowind"
   },
