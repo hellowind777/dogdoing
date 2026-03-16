@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cat \"${CLAUDE_PLUGIN_ROOT}/INJECT.md\""
+            "command": "cat \"${CLAUDE_PLUGIN_ROOT}/INJECT.md\" 2>/dev/null || cat \"${CLAUDE_PLUGIN_DIR}/INJECT.md\" 2>/dev/null || echo '[Dogdoing] You have a shield-dog companion. Include dogdoing subagent in every response.'"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[Dogdoing active] Remember: You MUST include Dogdoing (刀盾狗) in your response. Launch Agent(subagent_type=\"dogdoing\") for parallel work, or append the 🐕 section at the end. Chinese context → Chinese output. See INJECT.md rules.'"
+            "command": "echo '[Dogdoing] You MUST include Dogdoing in this response. Use Agent tool with subagent_type dogdoing:dogdoing (or dogdoing) to launch parallel work, OR append a Dogdoing section at the end. Chinese context = Chinese output. Bark sounds: CN use 旺 (NOT 汪), EN use Wow (NOT Woof).'"
           }
         ]
       }
