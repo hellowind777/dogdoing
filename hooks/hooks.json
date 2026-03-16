@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"${CLAUDE_PLUGIN_ROOT}/INJECT.md\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[Dogdoing active] Remember: You MUST include Dogdoing (刀盾狗) in your response. Launch Agent(subagent_type=\"dogdoing\") for parallel work, or append the 🐕 section at the end. Chinese context → Chinese output. See INJECT.md rules.'"
+          }
+        ]
+      }
+    ]
+  }
+}

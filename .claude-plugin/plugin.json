@@ -1,0 +1,12 @@
+{
+  "name": "dogdoing",
+  "version": "1.0.0",
+  "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog plugin that always participates in every task. It inserts its 'paw' into every job, sharing the workload as a subagent. When it truly can't help, it cheers the team on with '旺旺旺'!",
+  "author": {
+    "name": "hellowind"
+  },
+  "repository": "https://github.com/hellowind/dogdoing",
+  "license": "MIT",
+  "keywords": ["dogdoing", "shield-dog", "刀盾狗", "我的刀盾", "agent-team", "subagent"],
+  "hooks": "./hooks/hooks.json"
+}
