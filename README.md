@@ -69,15 +69,18 @@ dogdoing/
 4. **skills/dogdoing/SKILL.md** — 支持 `/dogdoing` 手动召唤
 5. **Stop hook** — 主代理完成时触发桌面通知 + 语音提醒（子代理不触发）
 
-## 通知配置
+## 配置
 
 编辑插件根目录的 `settings.json`：
 
 ```json
 {
-  "notify_level": 3
+  "notify_level": 3,
+  "subagent_enabled": true
 }
 ```
+
+### notify_level — 通知级别
 
 | 级别 | 效果 |
 |------|------|
@@ -85,6 +88,15 @@ dogdoing/
 | `1` | 仅桌面通知 |
 | `2` | 仅语音通知 |
 | `3` | 桌面 + 语音（默认） |
+
+### subagent_enabled — 子代理编排开关
+
+| 值 | 效果 |
+|------|------|
+| `true` | 刀盾狗自动参与每个任务（默认） |
+| `false` | 关闭自动编排，Claude 不会拉刀盾狗干活/喝彩，hook 不输出提示 |
+
+> 关闭后仍可通过 `/dogdoing` 手动召唤，通知功能也不受影响。
 
 手动测试：
 

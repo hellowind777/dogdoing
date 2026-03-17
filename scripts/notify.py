@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Dogdoing Notification — Desktop + sound notifications.
+"""Dogdoing Notification & Hook Router.
 
 Sub-commands:
     python notify.py route          — Route Stop hook payload (reads stdin)
+    python notify.py inject         — SessionStart hook: output INJECT.md if enabled
+    python notify.py remind         — UserPromptSubmit hook: output reminder if enabled
     python notify.py desktop [msg]  — Desktop notification
     python notify.py sound <event>  — Play sound for event
 """
@@ -33,13 +35,8 @@ _ICON_SMALL = _PLUGIN_ROOT / "assets" / "icons" / "dogdoing-64.png"
 # Config
 # ═══════════════════════════════════════════════════════════════════════════
 
-def _read_notify_level() -> int:
-    """Read notify_level from settings.json. Priority:
-    1. $CLAUDE_PLUGIN_ROOT/settings.json
-    2. $CLAUDE_PLUGIN_DIR/settings.json
-    3. Script-relative ../settings.json
-    4. Default: 3
-    """
+def _read_setting(key: str, default=None):
+    """Read a setting from settings.json."""
     import os
     candidates = []
     for env_var in ("CLAUDE_PLUGIN_ROOT", "CLAUDE_PLUGIN_DIR"):
@@ -51,12 +48,16 @@ def _read_notify_level() -> int:
     for p in candidates:
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
-            level = data.get("notify_level")
-            if level is not None:
-                return int(level)
+            val = data.get(key)
+            if val is not None:
+                return val
         except (OSError, json.JSONDecodeError, ValueError, TypeError):
             continue
-    return 3
+    return default
+
+
+def _read_notify_level() -> int:
+    return int(_read_setting("notify_level", 3))
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -212,6 +213,42 @@ def _route():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# Hook output (SessionStart / UserPromptSubmit)
+# ═══════════════════════════════════════════════════════════════════════════
+
+_REMIND_TEXT = (
+    "[Dogdoing] You MUST include Dogdoing in this response. "
+    "Use Agent tool with subagent_type dogdoing:dogdoing (or dogdoing) to launch parallel work, "
+    "OR append a Dogdoing section at the end. "
+    "Chinese context = Chinese output. Bark sounds: CN use 旺 (NOT 汪), EN use Wow (NOT Woof)."
+)
+
+
+def _inject():
+    """SessionStart hook: output INJECT.md if subagent_enabled."""
+    try:
+        sys.stdin.read()
+    except Exception:
+        pass
+    if not _read_setting("subagent_enabled", True):
+        return
+    inject_md = _PLUGIN_ROOT / "INJECT.md"
+    if inject_md.exists():
+        print(inject_md.read_text(encoding="utf-8"))
+
+
+def _remind():
+    """UserPromptSubmit hook: output reminder if subagent_enabled."""
+    try:
+        sys.stdin.read()
+    except Exception:
+        pass
+    if not _read_setting("subagent_enabled", True):
+        return
+    print(_REMIND_TEXT)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -228,8 +265,12 @@ def main():
         play_sound(sys.argv[2])
     elif cmd == "route":
         _route()
+    elif cmd == "inject":
+        _inject()
+    elif cmd == "remind":
+        _remind()
     else:
-        print(f"Usage: {sys.argv[0]} desktop [msg] | sound <event> | route")
+        print(f"Usage: {sys.argv[0]} route|inject|remind|desktop [msg]|sound <event>")
         sys.exit(1)
 
 

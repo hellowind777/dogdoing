@@ -1,3 +1,4 @@
 {
-  "notify_level": 3
+  "notify_level": 3,
+  "subagent_enabled": true
 }
