@@ -10,6 +10,8 @@
     "scripts/",
     "assets/",
     "INJECT.md",
+    "INJECT_SUBAGENT.md",
+    "INJECT_CHEER.md",
     "settings.json",
     "README.md"
   ],

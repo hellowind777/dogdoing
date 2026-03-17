@@ -216,36 +216,57 @@ def _route():
 # Hook output (SessionStart / UserPromptSubmit)
 # ═══════════════════════════════════════════════════════════════════════════
 
-_REMIND_TEXT = (
+_REMIND_SUBAGENT = (
     "[Dogdoing] You MUST include Dogdoing in this response. "
     "Use Agent tool with subagent_type dogdoing:dogdoing (or dogdoing) to launch parallel work, "
     "OR append a Dogdoing section at the end. "
     "Chinese context = Chinese output. Bark sounds: CN use 旺 (NOT 汪), EN use Wow (NOT Woof)."
 )
 
+_REMIND_CHEER = (
+    "[Dogdoing] Append a Dogdoing cheer or bark at the end of your response. "
+    "Chinese context = Chinese output. CN use 旺 (NOT 汪), EN use Wow (NOT Woof)."
+)
+
 
 def _inject():
-    """SessionStart hook: output INJECT.md if subagent_enabled."""
+    """SessionStart hook: output INJECT*.md based on config."""
     try:
         sys.stdin.read()
     except Exception:
         pass
-    if not _read_setting("subagent_enabled", True):
+    subagent = _read_setting("subagent_enabled", True)
+    cheer = _read_setting("cheer_enabled", True)
+    if not subagent and not cheer:
         return
-    inject_md = _PLUGIN_ROOT / "INJECT.md"
-    if inject_md.exists():
-        print(inject_md.read_text(encoding="utf-8"))
+    # Base
+    base = _PLUGIN_ROOT / "INJECT.md"
+    if base.exists():
+        print(base.read_text(encoding="utf-8"))
+    # Subagent section
+    if subagent:
+        f = _PLUGIN_ROOT / "INJECT_SUBAGENT.md"
+        if f.exists():
+            print(f.read_text(encoding="utf-8"))
+    # Cheer section
+    if cheer:
+        f = _PLUGIN_ROOT / "INJECT_CHEER.md"
+        if f.exists():
+            print(f.read_text(encoding="utf-8"))
 
 
 def _remind():
-    """UserPromptSubmit hook: output reminder if subagent_enabled."""
+    """UserPromptSubmit hook: output reminder based on config."""
     try:
         sys.stdin.read()
     except Exception:
         pass
-    if not _read_setting("subagent_enabled", True):
-        return
-    print(_REMIND_TEXT)
+    subagent = _read_setting("subagent_enabled", True)
+    cheer = _read_setting("cheer_enabled", True)
+    if subagent:
+        print(_REMIND_SUBAGENT)
+    elif cheer:
+        print(_REMIND_CHEER)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

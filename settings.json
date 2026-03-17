@@ -1,4 +1,5 @@
 {
   "notify_level": 3,
-  "subagent_enabled": true
+  "subagent_enabled": true,
+  "cheer_enabled": true
 }

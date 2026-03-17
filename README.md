@@ -76,7 +76,8 @@ dogdoing/
 ```json
 {
   "notify_level": 3,
-  "subagent_enabled": true
+  "subagent_enabled": true,
+  "cheer_enabled": true
 }
 ```
 
@@ -94,9 +95,16 @@ dogdoing/
 | 值 | 效果 |
 |------|------|
 | `true` | 刀盾狗自动参与每个任务（默认） |
-| `false` | 关闭自动编排，Claude 不会拉刀盾狗干活/喝彩，hook 不输出提示 |
+| `false` | 关闭自动编排，Claude 不会自动拉刀盾狗干活 |
 
-> 关闭后仍可通过 `/dogdoing` 手动召唤，通知功能也不受影响。
+### cheer_enabled — 喝彩/叫唤开关
+
+| 值 | 效果 |
+|------|------|
+| `true` | 没活干时喝彩或叫唤（默认） |
+| `false` | 关闭喝彩，安安静静 |
+
+> 两个开关独立控制。关闭后仍可通过 `/dogdoing` 或 `~dogdoing` 手动召唤，通知功能也不受影响。
 
 手动测试：
 
