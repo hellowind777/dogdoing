@@ -25,7 +25,7 @@ if sys.platform == 'win32':
 
 TITLE = "Dogdoing"
 DEFAULT_MSG = "What the dog doing???"
-SOUND_EVENTS = ("complete",)
+SOUND_EVENTS = ("complete", "error", "combo", "drog")
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
 _ICON = _PLUGIN_ROOT / "assets" / "icons" / "dogdoing.png"
 _ICON_SMALL = _PLUGIN_ROOT / "assets" / "icons" / "dogdoing-64.png"
@@ -237,7 +237,8 @@ def _inject():
         pass
     subagent = _read_setting("subagent_enabled", True)
     cheer = _read_setting("cheer_enabled", True)
-    if not subagent and not cheer:
+    drog = _read_setting("drog_enabled", True)
+    if not subagent and not cheer and not drog:
         return
     # Base
     base = _PLUGIN_ROOT / "INJECT.md"
@@ -253,20 +254,60 @@ def _inject():
         f = _PLUGIN_ROOT / "INJECT_CHEER.md"
         if f.exists():
             print(f.read_text(encoding="utf-8"))
+    # Drog section
+    if drog:
+        f = _PLUGIN_ROOT / "INJECT_DROG.md"
+        if f.exists():
+            content = f.read_text(encoding="utf-8")
+            # Strip late night section unless 2:00-5:00
+            from datetime import datetime
+            hour = datetime.now().hour
+            if 2 <= hour < 5:
+                print(content)
+            else:
+                # Remove [LATE NIGHT MODE] section
+                marker = "## [LATE NIGHT MODE]"
+                idx = content.find(marker)
+                if idx >= 0:
+                    print(content[:idx].rstrip())
+                else:
+                    print(content)
 
 
 def _remind():
-    """UserPromptSubmit hook: output reminder based on config."""
+    """UserPromptSubmit hook: output reminder based on config + detect ~drog."""
     try:
-        sys.stdin.read()
+        raw = sys.stdin.read()
     except Exception:
-        pass
+        raw = ""
+    # Detect ~drog trigger
+    if raw.strip():
+        try:
+            payload = json.loads(raw)
+            user_input = payload.get("user_input", "")
+        except (json.JSONDecodeError, ValueError):
+            user_input = raw
+        if "~drog" in user_input.lower():
+            _set_drog_triggered()
     subagent = _read_setting("subagent_enabled", True)
     cheer = _read_setting("cheer_enabled", True)
     if subagent:
         print(_REMIND_SUBAGENT)
     elif cheer:
         print(_REMIND_CHEER)
+
+
+def _set_drog_triggered():
+    """Write drog_triggered=true to state.json for tracker to pick up."""
+    state_dir = Path.home() / ".dogdoing"
+    state_file = state_dir / "state.json"
+    try:
+        data = json.loads(state_file.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        data = {}
+    data["drog_triggered"] = True
+    state_dir.mkdir(parents=True, exist_ok=True)
+    state_file.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
