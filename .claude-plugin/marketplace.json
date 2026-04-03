@@ -1,0 +1,20 @@
+{
+  "name": "dogdoing",
+  "owner": {
+    "name": "hellowind"
+  },
+  "metadata": {
+    "description": "Marketplace for the Dogdoing Claude Code plugin."
+  },
+  "plugins": [
+    {
+      "name": "dogdoing",
+      "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog that joins every Claude Code task as a subagent.",
+      "version": "1.0.2",
+      "source": "./",
+      "author": {
+        "name": "hellowind"
+      }
+    }
+  ]
+}

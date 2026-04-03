@@ -1,6 +1,6 @@
 {
   "name": "dogdoing",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Dogdoing (刀盾狗/我的刀盾) - Claude Code shield-dog plugin",
   "files": [
     ".claude-plugin/",

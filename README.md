@@ -26,13 +26,26 @@ Dogdoing 是一个 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 先添加 marketplace（只需一次）：
 
 ```bash
-/plugin marketplace add hellowind777/dogdoing
+claude plugin marketplace add hellowind777/dogdoing
 ```
 
 然后安装插件：
 
 ```bash
+claude plugin install dogdoing
+```
+
+如果你是在 Claude Code 会话内执行，也可以使用等价的 slash command：
+
+```bash
+/plugin marketplace add hellowind777/dogdoing
 /plugin install dogdoing
+```
+
+如果你的环境里存在同名插件，可显式指定 marketplace：
+
+```bash
+claude plugin install dogdoing@dogdoing
 ```
 
 ### 方式二：本地加载（开发/测试用）

@@ -1,12 +1,11 @@
 {
   "name": "dogdoing",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog that participates in every task, splitting work as a subagent. Cheers with Wow-wow-wow when idle! | 一只永远不会缺席的工作犬，每个任务都插上一爪，没活就旺旺旺喝彩！",
   "author": {
     "name": "hellowind"
   },
   "repository": "https://github.com/hellowind777/dogdoing",
   "license": "MIT",
-  "keywords": ["dogdoing", "shield-dog", "刀盾狗", "我的刀盾", "agent-team", "subagent"],
-  "hooks": "./hooks/hooks.json"
+  "keywords": ["dogdoing", "shield-dog", "刀盾狗", "我的刀盾", "agent-team", "subagent"]
 }
