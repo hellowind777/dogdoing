@@ -47,6 +47,7 @@ claude plugin install dogdoing
 ```bash
 claude plugin install dogdoing@dogdoing
 ```
+安装后，需要重启claude code生效。
 
 ### 方式二：本地加载（开发/测试用）
 
@@ -99,6 +100,11 @@ dogdoing/
 ## 配置
 
 编辑插件根目录的 `settings.json`：
+```
+cd ~/.claude/plugins/marketplaces/dogdoing
+vim settings.json
+```
+其中的配置如下：
 
 ```json
 {
