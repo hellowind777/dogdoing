@@ -1,0 +1,12 @@
+{
+  "name": "dogdoing",
+  "version": "1.1.0",
+  "description": "刀盾狗：忠诚参与每项任务，作为子代理承担分工；闲时会用“旺旺旺”喝彩。",
+  "author": {
+    "name": "hellowind"
+  },
+  "repository": "https://github.com/hellowind777/dogdoing",
+  "license": "MIT",
+  "hooks": "./hooks/claude-failure.json",
+  "keywords": ["dogdoing", "shield-dog", "刀盾狗", "我的刀盾", "agent-team", "subagent"]
+}

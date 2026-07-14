@@ -4,14 +4,14 @@
     "name": "hellowind"
   },
   "metadata": {
-    "description": "Marketplace for the Dogdoing Claude Code plugin."
+    "description": "刀盾狗在 Claude Code 与 Codex 上使用的插件市场。"
   },
   "plugins": [
     {
       "name": "dogdoing",
-      "description": "Dogdoing (刀盾狗/我的刀盾) - A loyal shield-dog that joins every Claude Code task as a subagent.",
-      "version": "1.0.2",
-      "source": "./",
+      "description": "刀盾狗：忠诚参与每项编码任务并承担子代理分工。",
+      "version": "1.1.0",
+      "source": "./plugins/dogdoing",
       "author": {
         "name": "hellowind"
       }

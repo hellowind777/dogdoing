@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"./scripts/hook_router.py\" session_start codex",
+            "command_windows": "cmd.exe /d /c call \"./scripts/hook_router_windows.cmd\" session_start codex",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"./scripts/hook_router.py\" prompt_submit codex",
+            "command_windows": "cmd.exe /d /c call \"./scripts/hook_router_windows.cmd\" prompt_submit codex",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"./scripts/hook_router.py\" post_tool_use codex",
+            "command_windows": "cmd.exe /d /c call \"./scripts/hook_router_windows.cmd\" post_tool_use codex",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"./scripts/hook_router.py\" stop codex",
+            "command_windows": "cmd.exe /d /c call \"./scripts/hook_router_windows.cmd\" stop codex",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,106 +1,158 @@
-# 🐕 Dogdoing — 我的刀盾
+# Dogdoing - 我的刀盾
 
-> 源自"我的刀盾"梗，一只永远不会缺席的工作犬。
+Dogdoing 是同时兼容 **Codex** 与 **Claude Code** 的工作型插件。它会参与任务的自动分工与验证，并提供桌面通知、语音、成就、连击、错误追踪、Drog 彩蛋和自检 Skill。
 
-Dogdoing 是一个 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 插件。安装后，刀盾狗会在你的每一个任务中"插上一爪"，帮你分活干。实在帮不上忙，就在一旁喝彩加油——因为好刀盾，永不离岗。
+V1 的目标是让原项目全部功能在 Codex 中可用，而不删除 Claude Code 支持。
 
-## 特性
+## V1 功能
 
-- 🔧 **真干活** — 不是吉祥物，是工作犬。会读文件、写代码、跑命令、搜网页、review 代码
-- 🐾 **插上一爪** — 自动拆分任务，作为子代理并行帮忙
-- 👥 **Agent Team 支持** — 编排子代理团队时，刀盾狗必定在列
-- 📣 **喝彩模式** — 实在没活干，就当啦啦队长，总结成果 + 旺旺旺
-- 🔔 **任务通知** — 主代理完成时桌面通知 + 语音提醒，支持 Windows/macOS/Linux
-- 🏆 **成就系统** — 5 个可解锁成就，追踪你的刀盾狗之旅
-- 🔥 **连击系统** — 连续成功操作触发 combo，旺声越来越响
-- 🐸 **Drog 彩蛋** — 输入 `~drog` 召唤蛙盾，混沌但有用的 Cheems 蛙分身
-- 🐕 **This is Fine** — 连续 3 次错误时，刀盾狗淡定安慰："一切正常。旺。"
-- 🔍 **/dogfood 自检** — 让刀盾狗 review 自己的代码，dogfooding！
-- 🌏 **中英双语** — 中文环境全中文输出，其他环境英文输出
-- 🎯 **旺旺旺 / Wow-wow-wow** — 中文用"旺"代替"汪"，谐音更旺；英文用"Wow"代替"Woof"，从"bow-wow"来，表示惊叹！
+- **自动分工**：每轮任务为刀盾狗寻找真实子任务，例如测试、审查、检索、边界检查或结果验证。
+- **原生多代理**：Codex 使用 `collaboration.spawn_agent`，Claude Code 使用已注册的 `Agent`。
+- **喝彩模式**：没有适合并行的工作时，刀盾狗总结成果并喝彩。
+- **桌面通知与语音**：任务结束时提醒，支持 Windows、macOS、Linux。
+- **成就系统**：包含首次召唤、累计 10 次、5 连击、首次错误、Drog 觉醒五项成就。
+- **连击系统**：连续成功 3、5、10、20 次触发四级提示。
+- **错误追踪**：失败时连击归零，连续 3 次失败触发 `This is Fine`。
+- **Drog 彩蛋**：`~drog` 触发一次蛙盾人格，凌晨 2:00-5:00 启用深夜模式。
+- **自检 Skill**：检查两套插件清单、Marketplace、Hook、脚本、Skill 和测试。
+- **全中文提示**：所有刀盾狗提示和输出使用简体中文，叫声统一使用“旺”。
 
-## 安装
+## 环境要求
 
-### 方式一：从 Marketplace 安装
+- Codex Desktop 优先使用应用自带的 Python 3；其他宿主需要 Python 3.9 或更高版本。
+- Codex 需要支持 Plugin、Plugin Hook 与 Multi-agent 的版本。
+- 桌面或终端环境需要允许执行本地 Hook 命令。
 
-先添加 marketplace（只需一次）：
+插件没有第三方 Python 运行时依赖。
 
-```bash
+Windows 会依次尝试 `DOGDOING_PYTHON`、Codex 自带 Python、PATH 中的 `python.exe` 或 `python3.exe`，最后尝试 `py.exe -3`。需要固定解释器时，可将 `DOGDOING_PYTHON` 设置为 Python 可执行文件的完整路径。
+
+## Codex 安装
+
+### 从 Git 仓库安装
+
+先添加 Marketplace：
+
+~~~bash
+codex plugin marketplace add hellowind777/dogdoing
+~~~
+
+再安装插件：
+
+~~~bash
+codex plugin add dogdoing@dogdoing
+~~~
+
+首次安装或 Hook 命令发生变化后，请在 Codex 的 Hooks 管理页审查并信任 Dogdoing 的 4 个 Hook。`installed, enabled` 只表示插件已启用；Hooks 页显示 `Active 4`、不再显示待审查项，才表示文字注入、追踪和完成声音可以执行。
+
+安装或更新完成后，请完全退出并重新启动 Codex Desktop，再新建任务验证。仅新建任务不会刷新已经启动的 app-server 插件快照；旧快照还可能继续引用更新时已删除的版本缓存。Codex CLI 用户退出当前进程后重新运行即可。
+
+### 本地开发安装
+
+在仓库根目录执行：
+
+~~~bash
+codex plugin marketplace add .
+codex plugin add dogdoing@dogdoing
+~~~
+
+检查安装状态：
+
+~~~bash
+codex plugin list
+~~~
+
+预期看到 `dogdoing@dogdoing` 的状态为 `installed, enabled`。
+
+本地重复安装时，开发脚本会给 Codex 清单追加一个 `+codex.<缓存标识>` 后缀；标识的具体格式由当前 Codex `plugin-creator` 决定，发布基线版本仍是 `1.1.0`。
+
+## Claude Code 安装
+
+### 从 Git 仓库安装
+
+~~~bash
 claude plugin marketplace add hellowind777/dogdoing
-```
-
-然后安装插件：
-
-```bash
 claude plugin install dogdoing
-```
+~~~
 
-如果你是在 Claude Code 会话内执行，也可以使用等价的 slash command：
+如存在同名插件，可显式指定 Marketplace：
 
-```bash
-/plugin marketplace add hellowind777/dogdoing
-/plugin install dogdoing
-```
-
-如果你的环境里存在同名插件，可显式指定 marketplace：
-
-```bash
+~~~bash
 claude plugin install dogdoing@dogdoing
-```
+~~~
 
-### 方式二：本地加载（开发/测试用）
+### 本地开发加载
 
-```bash
-claude --plugin-dir /path/to/dogdoing
-```
+~~~bash
+claude --plugin-dir /path/to/dogdoing/plugins/dogdoing
+~~~
 
-## 插件结构
+## 使用方式
 
-```
+| 功能 | Codex | Claude Code |
+|---|---|---|
+| 手动召唤 | `$dogdoing [主题]` | `/dogdoing [主题]` |
+| 自我审查 | `$dogfood [bug/performance/compat/style]` | `/dogfood [方向]` |
+| 文本召唤 | `~dogdoing [主题]` | `~dogdoing [主题]` |
+| Drog 彩蛋 | `~drog` | `~drog` |
+| 自动参与 | Codex 原生多代理 | Claude Agent 子代理 |
+
+手动召唤会等待刀盾狗完成分析再返回。多代理能力不可用时，主代理执行同等检查，不会让用户任务失败。
+
+## 仓库结构
+
+~~~text
 dogdoing/
-├── .claude-plugin/
-│   └── plugin.json        # 插件清单
-├── assets/
-│   └── sounds/
-│       ├── complete.wav   # "我的刀盾"
-│       ├── error.wav      # "呜"
-│       ├── combo.wav      # "旺旺旺"
-│       └── drog.wav       # "呱"
-├── hooks/
-│   └── hooks.json         # SessionStart + UserPromptSubmit + PostToolUse + PostToolUseFailure + Stop
-├── agents/
-│   └── dogdoing.md        # 子代理定义
-├── scripts/
-│   ├── notify.py          # 通知脚本（桌面+语音+路由）
-│   └── tracker.py         # 游戏引擎（成就+连击+错误追踪）
-├── skills/
-│   ├── dogdoing/
-│   │   └── SKILL.md       # /dogdoing 手动召唤技能
-│   └── dogfood/
-│       └── SKILL.md       # /dogfood 自我审查技能
-├── INJECT.md              # 核心指令
-├── INJECT_DROG.md         # Drog 蛙盾彩蛋指令
-├── settings.json          # 配置
-├── package.json           # npm 分发
-└── .gitignore
-```
+|-- .agents/plugins/marketplace.json       # Codex Marketplace
+|-- .claude-plugin/marketplace.json        # Claude Marketplace
+|-- plugins/dogdoing/
+|   |-- .codex-plugin/plugin.json          # Codex 插件清单
+|   |-- .claude-plugin/plugin.json         # Claude 插件清单与附加 Hook 路径
+|   |-- hooks.json                         # 旧版 Codex 兼容 Hook
+|   |-- hooks/hooks.json                   # Codex 与 Claude 共享 Hook
+|   |-- hooks/claude-failure.json          # Claude 独有失败事件
+|   |-- agents/dogdoing.md                 # Claude 注册代理人格
+|   |-- skills/
+|   |   |-- dogdoing/SKILL.md
+|   |   `-- dogfood/SKILL.md
+|   |-- scripts/
+|   |   |-- runtime.py                     # 共享配置和状态 I/O
+|   |   |-- hook_router.py                 # 双平台事件路由
+|   |   |-- hook_router_windows.cmd        # Windows Python 入口
+|   |   |-- hook_router_windows_error.txt  # Windows 中文启动错误
+|   |   |-- notify.py                      # 通知、声音、注入与 Drog
+|   |   `-- tracker.py                     # 成就、连击和错误追踪
+|   |-- assets/icons/
+|   |-- assets/sounds/
+|   |-- INJECT.md
+|   |-- INJECT_SUBAGENT.md
+|   |-- INJECT_SUBAGENT_CODEX.md
+|   |-- INJECT_CHEER.md
+|   |-- INJECT_DROG.md
+|   `-- settings.json
+|-- tests/
+`-- package.json
+~~~
 
-## 工作原理
+## Hook 映射
 
-1. **SessionStart hook** — 会话启动时注入 `INJECT.md` + `INJECT_DROG.md` 核心指令
-2. **UserPromptSubmit hook** — 每次用户发消息时轻量提醒 + 检测 `~drog` 触发
-3. **PostToolUse hook** — 工具成功后更新连击计数、检查成就
-4. **PostToolUseFailure hook** — 工具失败后重置连击、累计错误、触发 "This is Fine"
-5. **agents/dogdoing.md** — 子代理定义，支持 `Agent(subagent_type="dogdoing:dogdoing")` 调用
-6. **skills/dogdoing/SKILL.md** — 支持 `/dogdoing` 手动召唤
-7. **skills/dogfood/SKILL.md** — 支持 `/dogfood` 自我审查
-8. **Stop hook** — 主代理完成时触发桌面通知 + 语音提醒
+| 行为 | Codex | Claude Code |
+|---|---|---|
+| 会话注入 | `SessionStart` | `SessionStart` |
+| 用户提示与 Drog 检测 | `UserPromptSubmit` | `UserPromptSubmit` |
+| 成功追踪 | `PostToolUse` | `PostToolUse` |
+| 失败追踪 | 从 `PostToolUse` 结果状态与退出码判断 | `PostToolUseFailure` |
+| 完成通知 | `Stop` | `Stop` |
+
+Codex 与 Claude Code 都从 `hooks/hooks.json` 加载公共 Hook，并调用 `scripts/hook_router.py`。Claude 插件清单再从 `hooks/claude-failure.json` 追加 `PostToolUseFailure`；该事件不进入 Codex 清单，避免整个插件 Hook 因未知事件加载失败。路由器根据当前会话环境识别宿主，并按宿主输出对应协议；无法解析的载荷会安全回退为空对象，未知事件返回非零退出码，方便定位错误配置。根目录 `hooks.json` 仅保留给仍使用旧发现路径的 Codex 版本。
+
+Hook 在 Windows 使用 `command_windows` 调用统一入口，由入口寻找可用的 Python 3 并执行同一个 `hook_router.py`；在 macOS/Linux 使用 `command` 调用 `python3`。Windows 入口会保留 Hook 标准输入、事件参数和退出码，找不到解释器时输出简体中文错误。
 
 ## 配置
 
-编辑插件根目录的 `settings.json`：
+编辑插件目录中的 `plugins/dogdoing/settings.json`：
 
-```json
+~~~json
 {
   "notify_level": 3,
   "subagent_enabled": true,
@@ -108,93 +160,66 @@ dogdoing/
   "tracker_enabled": true,
   "drog_enabled": true
 }
-```
+~~~
 
-### notify_level — 通知级别
+| 配置 | 默认值 | 作用 |
+|---|---:|---|
+| `notify_level` | `3` | `0` 关闭，`1` 仅桌面，`2` 仅语音，`3` 桌面加语音 |
+| `subagent_enabled` | `true` | 自动分配刀盾狗子任务 |
+| `cheer_enabled` | `true` | 无并行任务时启用喝彩 |
+| `tracker_enabled` | `true` | 启用成就、连击和错误追踪 |
+| `drog_enabled` | `true` | 启用 `~drog` 和深夜模式 |
 
-| 级别 | 效果 |
-|------|------|
-| `0` | 无通知 |
-| `1` | 仅桌面通知 |
-| `2` | 仅语音通知 |
-| `3` | 桌面 + 语音（默认） |
+所有开关独立生效。关闭自动分工后，仍可通过 `$dogdoing`、`/dogdoing` 或 `~dogdoing` 手动调用。
 
-### subagent_enabled — 子代理编排开关
+## 成就与连击
 
-| 值 | 效果 |
-|------|------|
-| `true` | 刀盾狗自动参与每个任务（默认） |
-| `false` | 关闭自动编排，Claude 不会自动拉刀盾狗干活 |
-
-### cheer_enabled — 喝彩/叫唤开关
-
-| 值 | 效果 |
-|------|------|
-| `true` | 没活干时喝彩或叫唤（默认） |
-| `false` | 关闭喝彩，安安静静 |
-
-### tracker_enabled — 成就/连击追踪开关
-
-| 值 | 效果 |
-|------|------|
-| `true` | 启用成就系统、连击系统、错误追踪（默认） |
-| `false` | 关闭追踪，安静模式 |
-
-### drog_enabled — Drog 蛙盾彩蛋开关
-
-| 值 | 效果 |
-|------|------|
-| `true` | 启用 `~drog` 彩蛋 + 深夜模式（默认） |
-| `false` | 关闭 Drog 彩蛋 |
-
-> 所有开关独立控制。关闭后仍可通过 `/dogdoing` 或 `~dogdoing` 手动召唤，通知功能也不受影响。
-
-手动测试：
-
-```bash
-# 桌面通知
-python scripts/notify.py desktop "测试通知"
-
-# 语音播放
-python scripts/notify.py sound complete
-```
-
-## 刀盾狗的三种模式
-
-| 模式 | 触发条件 | 输出示例 |
-|------|---------|---------|
-| 🔧 干活 | 能找到可做的子任务 | `🐕 刀盾狗帮忙：` + 实际贡献 |
-| 📣 喝彩 | Agent Team 中无法分配任务 | `🐕 刀盾狗喝彩：干得漂亮！旺、旺、旺旺旺旺……冲冲冲！` |
-| 🐕 叫唤 | 穷尽所有方式仍无法帮忙 | `🐕 我的刀盾：旺、旺、旺旺旺旺……` |
-
-## 成就系统
+成就状态保存在 `~/.dogdoing/achievements.json`，运行状态保存在 `~/.dogdoing/state.json`。
 
 | 成就 | 条件 |
-|------|------|
-| 🗡️ 初出茅庐 | 首次召唤刀盾狗子代理 |
-| 🛡️ 刀盾合璧 | 刀盾狗参与 10 个任务 |
-| 🔥 连旺 | 连续 5 次成功（combo streak） |
-| 💀 狗头保命 | 首次检测到工具执行错误 |
-| 🐸 Drog 觉醒 | 触发 Drog 彩蛋 |
+|---|---|
+| 初出茅庐 | 首次召唤刀盾狗子代理 |
+| 刀盾合璧 | 累计 10 次成功工具事件 |
+| 连旺 | 连续 5 次成功 |
+| 狗头保命 | 首次工具失败 |
+| Drog 觉醒 | 触发 `~drog` 后产生下一次成功事件 |
 
-成就数据存储在 `~/.dogdoing/achievements.json`，解锁时弹桌面通知。
+| 连击数 | 提示 |
+|---:|---|
+| 3 | 旺 |
+| 5 | 旺旺 |
+| 10 | 旺旺旺旺 |
+| 20 | 旺旺旺旺旺旺旺旺，冲冲冲 |
 
-## 连击系统
+## 跨平台通知
 
-连续成功的工具调用会触发 combo：
+- Windows：Windows Runtime Toast 与 `winsound`。
+- macOS：`osascript` 与 `afplay`。
+- Linux：`notify-send`，声音依次尝试 `aplay`、`paplay`。
+- 系统通知工具不可用时降级为终端响铃，不阻断 Codex 或 Claude Code。
 
-| 连击数 | 输出 |
-|--------|------|
-| 3 | 🐕 旺！ |
-| 5 | 🐕 旺旺！ |
-| 10 | 🐕 旺旺旺旺！ |
-| 20 | 🐕 旺旺旺旺旺旺旺旺！！！冲冲冲！ |
+手动检查通知：
 
-工具执行失败时连击归零。连续 3 次失败触发 "This is Fine" 模式。
+~~~bash
+python plugins/dogdoing/scripts/notify.py desktop "测试通知"
+python plugins/dogdoing/scripts/notify.py sound complete
+~~~
 
-## Drog 蛙盾彩蛋
+## 测试与校验
 
-输入 `~drog` 召唤 Drog（蛙盾）——刀盾狗的混沌分身，一只 Cheems 蛙。所有"旺"变"呱"，混乱但有用。凌晨 2-5 点 Drog 偶尔自动出现。
+运行全部自动化测试：
+
+~~~bash
+python -m unittest discover -s tests -v
+~~~
+
+校验 Codex 插件清单：
+
+~~~bash
+python /path/to/plugin-creator/scripts/validate_plugin.py plugins/dogdoing
+~~~
+
+实际发布前还应执行本地 Marketplace 安装，并通过 `codex plugin list` 确认版本与启用状态。
 
 ## License
 
