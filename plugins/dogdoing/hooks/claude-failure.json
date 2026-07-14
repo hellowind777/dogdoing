@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUseFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/hook_router.py\" post_tool_failure claude",
+            "command_windows": "cmd.exe /d /c call \"${CLAUDE_PLUGIN_ROOT}/scripts/hook_router_windows.cmd\" post_tool_failure claude",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

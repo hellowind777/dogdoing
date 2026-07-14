@@ -1,22 +1,17 @@
 {
   "name": "dogdoing",
-  "version": "1.0.2",
-  "description": "Dogdoing (刀盾狗/我的刀盾) - Claude Code shield-dog plugin",
+  "version": "1.1.0",
+  "description": "刀盾狗：适用于 Claude Code 与 Codex 的任务协作插件",
   "files": [
+    ".agents/",
     ".claude-plugin/",
-    "agents/",
-    "hooks/",
-    "skills/",
-    "scripts/",
-    "assets/",
-    "INJECT.md",
-    "INJECT_SUBAGENT.md",
-    "INJECT_CHEER.md",
-    "INJECT_DROG.md",
-    "settings.json",
+    "plugins/",
     "README.md"
   ],
-  "keywords": ["claude-code", "plugin", "dogdoing", "shield-dog"],
+  "scripts": {
+    "test": "python -m unittest discover -s tests -v"
+  },
+  "keywords": ["claude-code", "codex", "plugin", "dogdoing", "shield-dog", "subagent"],
   "author": "hellowind",
   "license": "MIT",
   "repository": "https://github.com/hellowind777/dogdoing"
