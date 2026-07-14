@@ -34,10 +34,11 @@ python3.exe "%DOGDOING_ROUTER%" %*
 exit /b %errorlevel%
 
 :launcher_python
-if not exist "%SystemRoot%\py.exe" goto missing_python
-"%SystemRoot%\py.exe" -3 -c "import sys" >nul 2>nul
+%SystemRoot%\System32\where.exe py.exe >nul 2>nul
 if errorlevel 1 goto missing_python
-"%SystemRoot%\py.exe" -3 "%DOGDOING_ROUTER%" %*
+py.exe -3 -c "import sys" >nul 2>nul
+if errorlevel 1 goto missing_python
+py.exe -3 "%DOGDOING_ROUTER%" %*
 exit /b %errorlevel%
 
 :missing_python

@@ -246,6 +246,15 @@ class HookRouterTests(unittest.TestCase):
         self.assertIn("[刀盾狗]", completed.stderr)
         self.assertIn("DOGDOING_PYTHON", completed.stderr)
 
+    # 功能：验证 Windows 入口能从 PATH 找到用户级 Python Launcher
+    def test_windows_hook_runner_searches_launcher_on_path(self):
+        runner = SCRIPTS_DIR / "hook_router_windows.cmd"
+        content = runner.read_text(encoding="utf-8")
+        self.assertIn(r"%SystemRoot%\System32\where.exe py.exe", content)
+        self.assertNotIn(r'if not exist "%SystemRoot%\py.exe"', content)
+        self.assertIn('py.exe -3 -c "import sys"', content)
+        self.assertIn('py.exe -3 "%DOGDOING_ROUTER%" %*', content)
+
     # 功能：验证 Codex 实际发现的共享 Hook 配置包含跨平台公共事件和 Windows 命令
     def test_codex_hook_config_uses_router(self):
         path = PLUGIN_ROOT / "hooks" / "hooks.json"

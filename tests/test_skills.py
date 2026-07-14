@@ -72,6 +72,13 @@ class SkillCompatibilityTests(unittest.TestCase):
             with self.subTest(required=required):
                 self.assertIn(required, content)
 
+    # 功能：验证自检 Skill 与全中文输出契约保持一致
+    def test_dogfood_skill_keeps_chinese_contract(self):
+        content = self.read_text(DOGFOOD_SKILL)
+        self.assertIn("所有上下文使用简体中文输出", content)
+        self.assertNotIn("中英双语", content)
+        self.assertNotIn("其他上下文用英文", content)
+
     # 功能：验证 Codex 自动分工要求等待并汇总刀盾狗结果
     def test_codex_injection_collects_agent_result(self):
         content = self.read_text(CODEX_INJECTION)
